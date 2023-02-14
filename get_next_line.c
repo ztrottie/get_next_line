@@ -6,7 +6,7 @@
 /*   By: ztrottie <zakytrottier@hotmail.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 13:11:00 by ztrottie          #+#    #+#             */
-/*   Updated: 2022/11/28 15:17:22 by ztrottie         ###   ########.fr       */
+/*   Updated: 2023/02/14 12:42:40 by ztrottie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*ft_clean_stash(char *stash, char *line)
 		new_stash[i] = stash[len_line + i];
 		i++;
 	}
+	if (*new_stash == 0)
+		new_stash = ft_free(new_stash);
 	return (stash = ft_free(stash), new_stash);
 }
 
@@ -71,7 +73,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 		return (NULL);
 	if (!stash)
 		stash = ft_calloc(1, sizeof(char));
@@ -90,5 +92,5 @@ char	*get_next_line(int fd)
 		line = ft_make_line(stash, nbyte);
 		return (ft_free(buffer), stash = ft_clean_stash(stash, line), line);
 	}
-	return (stash = ft_free(stash), ft_free(buffer), NULL);
+	return (free(stash), free(buffer), NULL);
 }
